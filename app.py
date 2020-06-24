@@ -3,7 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-from api.models.base import BaseModel, db
+from api.models.base import Base, db
 from config import app_config
 
 
