@@ -44,13 +44,14 @@ class RegisterUserAPI(Resource):
             user = {
                 "email": new_user.email
             }
-            print(new_user)
+            user_id = new_user.uuid
+            token = generate_token(user_id)
             app.logger.info(
                 'User {} SUCCESSFULLY CREATED. The log time is UTC {}'.format(user, access_time))
 
             return response_builder(dict(
-                data=user,
-                message='User successfully created, please Log In'
+                token=token.decode(),
+                message='User successfully created, Welcome to PBP'
             ), 201)
 
         return response_builder(dict(

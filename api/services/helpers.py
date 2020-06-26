@@ -1,14 +1,12 @@
 import os
 
-import requests
 from flask import jsonify, current_app
 import jwt
 from datetime import datetime, timedelta
 
-from api.models import User
 
 
-def generate_token(self, user_id):
+def generate_token(user_id):
         """ Generates the access token"""
 
         try:
