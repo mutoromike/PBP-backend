@@ -1,3 +1,5 @@
+from flask_bcrypt import Bcrypt
+
 from api.models.base import Base, db
 
 
@@ -18,3 +20,13 @@ class User(Base):
     #     lazy='dynamic',
     #     order_by='desc(Business.created_at)'
     # )
+
+    def __init__(self, first_name, last_name, email, password):
+        """
+        Initialization of user credentials
+        """
+
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.password = Bcrypt().generate_password_hash(password).decode()
