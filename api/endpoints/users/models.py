@@ -14,12 +14,12 @@ class User(Base):
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
 
-    # businesses = db.relationship(
-    #     'Business',
-    #     backref='created_by',
-    #     lazy='dynamic',
-    #     order_by='desc(Business.created_at)'
-    # )
+    businesses = db.relationship(
+        'Business',
+        backref='created_by',
+        lazy='dynamic',
+        order_by='desc(Business.created_at)'
+    )
 
     def __init__(self, first_name, last_name, email, password):
         """
