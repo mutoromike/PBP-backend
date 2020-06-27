@@ -5,7 +5,7 @@ from flask import request
 
 from api.utils.helpers import response_builder
 
-from .marshmallow_schema import register_user_schema
+from .marshmallow_schema import register_user_schema, login_user_schema
 from api.endpoints.users.models import User
 from api.services.helpers import generate_token
 
@@ -18,8 +18,6 @@ class RegisterUserAPI(Resource):
     def __init__(self, **kwargs):
         """
         Inject dependencies for resource.
-
-        Currently, app imports have been  done on the specific methods
         """
         self.User = kwargs['User']
 
@@ -41,17 +39,50 @@ class RegisterUserAPI(Resource):
             )
 
             new_user.save()
-            user = {
-                "email": new_user.email
-            }
-            user_id = new_user.uuid
-            token = generate_token(user_id)
+            token = generate_token(new_user.uuid)
             app.logger.info(
-                'User {} SUCCESSFULLY CREATED. The log time is UTC {}'.format(user, access_time))
+                'User {} SUCCESSFULLY CREATED. The log time is UTC {}'.format(new_user.email, access_time))
 
             return response_builder(dict(
                 token=token.decode(),
                 message='User successfully created, Welcome to PBP'
+            ), 201)
+
+        return response_builder(dict(
+                                message="User data must be provided."),
+                                400)
+
+
+class LoginUserAPI(Resource):
+    """Login User Resources."""
+
+    def __init__(self, **kwargs):
+        """
+        Inject dependencies for resource.
+        """
+        self.User = kwargs['User']
+
+    def post(self):
+        """Log in User"""
+        from manage import app
+        payload = request.get_json()
+        print(payload)
+        if payload:
+            try:
+                login_user_schema.load(payload)
+            except Exception as err:
+                return response_builder(dict(err.messages), 400)
+
+            user = User.query.filter_by(email=payload['email']).first()
+
+            
+            token = generate_token(user.uuid)
+            app.logger.info(
+                'LOGIN SUCCESSFUL. The log time is UTC {}'.format(access_time))
+
+            return response_builder(dict(
+                token=token.decode(),
+                message='Successful Login, Welcome to PBP'
             ), 201)
 
         return response_builder(dict(
