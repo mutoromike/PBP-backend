@@ -6,7 +6,7 @@ from flask_cors import CORS
 
 from api.models.base import db
 from api.endpoints.users import users_bp
-from api.endpoints.bussiness import business_bp
+from api.endpoints.business import business_bp
 from config import app_config
 
 

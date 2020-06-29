@@ -20,6 +20,7 @@ flask-cors = "*"
 flask-bcrypt = "*"
 pyjwt = "*"
 flask-restful = "*"
+jose = "*"
 
 [requires]
 python_version = "3.7"

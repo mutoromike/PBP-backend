@@ -2,7 +2,7 @@
 
 
 def business_bp(Api, Blueprint):
-    from .models import Business
+    from .models import Business, Country
     from .business import BusinessAPI
 
     business_bp_service = Blueprint('business_api', __name__)
@@ -15,7 +15,8 @@ def business_bp(Api, Blueprint):
         '/business/',
         endpoint='business',
         resource_class_kwargs={
-            'Business': Business
+            'Business': Business,
+            'Country': Country
         }
     )
     return business_bp_service

@@ -10,9 +10,10 @@ from functools import wraps
 import datetime
 
 from flask import current_app, g, request
-from jose import ExpiredSignatureError, JWTError, jwt
+import jwt
+from jwt import ExpiredSignatureError, InvalidTokenError
 
-from .helpers import store_user_details
+# from .helpers import store_user_details
 from api.models import User
 from api.utils.helpers import response_builder
 
@@ -25,16 +26,16 @@ def verify_token(authorization_token, secret_key):
         payload = jwt.decode(
             authorization_token,
             secret_key,
-            algorithms=['RS256'],
+            algorithms=['HS512'],
             options={
                 'verify_signature': True,
                 'verify_exp': True
             })
-    except JWTError:
+    except InvalidTokenError:
         payload = jwt.decode(
             authorization_token,
             secret_key,
-            algorithms=['RS256'],
+            algorithms=['HS512'],
             options={
                 'verify_signature': True,
                 'verify_exp': True
@@ -61,14 +62,15 @@ def token_required(f):
 
         try:
             # decode token
-            secret_key = os.get_env("SECRET_KEY")
+            secret_key = current_app.config.get('SECRET_KEY')
             payload = verify_token(authorization_token,
                                    secret_key)
         except ExpiredSignatureError:
             expired_response = "The authorization token supplied is expired"
             app.logger.warning('Token HAS EXPIRED!')
             return response_builder(dict(message=expired_response), 401)
-        except JWTError:
+        # except JWTError:
+        except InvalidTokenError:
             app.logger.info('Token Authentication FAILED!: The ACCESS time is UTC {}'.format(access_time)) # Noqa E501
             return response_builder(dict(message=unauthorized_message), 401)
 
@@ -79,11 +81,11 @@ def token_required(f):
             return response_builder(dict(message="malformed token"), 401)
         else:
             user = User.query.get(payload["UserInfo"]["id"])  #TODO check if user id exists
-            # user id returns the name of the user
-            if not user:
-                user = store_user_details(payload, authorization_token)
-            g.current_user = user
-            g.current_user_token = authorization_token
+            if user:
+                g.current_user = user
+                g.current_user_token = authorization_token
+            else:
+                return response_builder(dict(message="malformed token"), 401)
 
             app.logger.info('Token Authentication SUCCESSFUL! The CURRENT USER is {}'.format(user))
         return f(*args, **kwargs)
