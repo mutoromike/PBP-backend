@@ -1,10 +1,9 @@
-import datetime
 
+import datetime
 from flask_restful import Resource
 from flask import request
 
 from api.utils.helpers import response_builder
-
 from .marshmallow_schema import register_user_schema, login_user_schema
 from api.endpoints.users.models import User
 from api.services.helpers import generate_token

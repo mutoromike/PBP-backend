@@ -2,6 +2,7 @@ import os
 
 from flask import jsonify, current_app
 import jwt
+# from pyjwt import jwt
 from datetime import datetime, timedelta
 
 
@@ -14,7 +15,9 @@ def generate_token(user_id):
             payload = {
                 'exp': datetime.utcnow() + timedelta(minutes=60),
                 'iat': datetime.utcnow(),
-                'sub': user_id
+                'UserInfo': {
+                    'id': user_id
+                }
             }
             # create the byte string token using the payload and the SECRET key
             jwt_string = jwt.encode(
