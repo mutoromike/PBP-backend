@@ -21,6 +21,7 @@ flask-bcrypt = "*"
 pyjwt = "*"
 flask-restful = "*"
 jose = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.7"
