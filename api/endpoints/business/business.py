@@ -2,6 +2,7 @@ import datetime
 
 from flask_restful import Resource
 from flask import request, g
+from pandas import pandas as pd
 
 from api.endpoints.business.models import Business, Country
 from api.utils.helpers import response_builder
@@ -63,3 +64,10 @@ class BusinessAPI(Resource):
                                 message="Business data must be provided."),
                                 400)
 
+
+class ProcessCsvAPI(Resource):
+
+    def post(self):
+        payload = request.files['file']
+        print(payload)
+        return
