@@ -65,7 +65,6 @@ class LoginUserAPI(Resource):
         """Log in User"""
         from manage import app
         payload = request.get_json()
-        print(payload)
         if payload:
             try:
                 login_user_schema.load(payload)
