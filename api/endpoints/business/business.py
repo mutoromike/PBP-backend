@@ -133,5 +133,6 @@ class ProcessCsvAPI(Resource):
 
     def post(self):
         payload = request.files['file']
-        print(payload)
+        data = pd.read_csv(payload)
+        print(data)
         return
