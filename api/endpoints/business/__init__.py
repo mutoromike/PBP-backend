@@ -13,6 +13,8 @@ def business_bp(Api, Blueprint):
         BusinessAPI,
         '/business',
         '/business/',
+        '/business/<string:business_id>',
+        '/business/<string:business_id>/',
         endpoint='business',
         resource_class_kwargs={
             'Business': Business,
