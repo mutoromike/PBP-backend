@@ -7,16 +7,17 @@ class Business(Base):
     __tablename__ = "businesses"
 
     name = db.Column(db.String, nullable=False)
-    name_abbr = db.Column(db.String, nullable=False)
+    abbreviated_name = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
     country = db.Column(db.String, nullable=False)
     entity = db.Column(db.String, nullable=False)
     revenue = db.Column(db.String, nullable=False)
-    acc_sftw = db.Column(db.String, nullable=False)
+    accounting_software = db.Column(db.String, nullable=False)
     op_countries = db.relationship(
         'Country',
         backref='business',
-        lazy='dynamic'
+        lazy='dynamic',
+        cascade="all, delete-orphan"
     )
     created_by_id = db.Column(
         db.String,

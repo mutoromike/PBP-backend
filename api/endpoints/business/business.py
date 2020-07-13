@@ -1,4 +1,5 @@
 import datetime
+import string
 
 from flask_restful import Resource
 from flask import request, g
@@ -27,6 +28,12 @@ class BusinessAPI(Resource):
     def post(self):
         """Create new business"""
         from manage import app
+        user = g.current_user.uuid
+        existing = self.Business.query.filter_by(created_by_id=user).all()
+        if existing:
+            return response_builder(dict(
+                message="You already have an existing business"
+            ), 400)
         payload = request.get_json(silent=True)
         if payload:
             try:
@@ -34,15 +41,15 @@ class BusinessAPI(Resource):
             except Exception as err:
                 return response_builder(dict(err.messages), 400)
 
-            created_by = g.current_user.uuid
+            created_by = user
             new_business = self.Business(
                 name=payload['name'],
-                name_abbr=payload['abbreviated_name'],
+                abbreviated_name=payload['abbreviated_name'],
                 address=payload['address'],
                 country=payload['country'],
                 entity=payload['entity'],
                 revenue=payload['revenue'],
-                acc_sftw=payload['accounting_software'],
+                accounting_software=payload['accounting_software'],
                 created_by_id=created_by
             )
 
@@ -50,7 +57,7 @@ class BusinessAPI(Resource):
             countries = payload['countries'].split(",")
             for country in countries:
                 new_country = self.Country(
-                    name=country.lower(),
+                    name=string.capwords(country),
                     business_id=new_business.uuid
                 )
                 new_country.save()
@@ -67,11 +74,13 @@ class BusinessAPI(Resource):
                                 400)
 
     @token_required
-    def get(self, business_id=None):
+    def get(self):
         """ Get created business """
-        business = self.Business.query.filter_by(uuid=business_id).first()
-        countries = self.Country.query.filter_by(business_id=business_id).all()
+        user = g.current_user.uuid
+        business = self.Business.query.filter_by(created_by_id=user).first()
         if business:
+            countries = self.Country.query.filter_by(business_id=business.uuid).all()
+
             data = business_schema.dump(business)
             if countries:
                 country_data = []
@@ -82,17 +91,34 @@ class BusinessAPI(Resource):
 
             return response_builder(dict(business=data), 200)
         return response_builder(dict(
-                                message="Business with that ID not found"),
+                                message="You have no Business Account"),
+                                404)
+
+    @token_required
+    def delete(self, business_id):
+        """ Delete Business """
+        business = self.Business.query.filter_by(uuid=business_id).first()
+        if business:
+            deleted = business.delete()
+            if deleted:
+                return response_builder(dict(message="Business Successfully DELETED!"), 200)
+            else:
+                return response_builder(dict(message="An Error Occurred, Please Try again."), 400)
+        return response_builder(dict(
+                                message="A Business With That ID doesn't exist!"),
                                 404)
 
     @token_required
     def put(self, business_id=None):
         """ Update specific business """
-        print(g.current_user.email)
         business = self.Business.query.filter_by(uuid=business_id).first()
         if business:
             # refactor this later
-            print(business)
+            user = g.current_user.uuid
+            if business.created_by_id != user:
+                return response_builder(dict(
+                    message="You can only edit your own business"
+                ), 401)
             payload = request.get_json(silent=True)
             if payload:
                 try:
@@ -101,12 +127,12 @@ class BusinessAPI(Resource):
                     return response_builder(dict(err.messages), 400)
 
                 business.name = payload['name'],
-                business.name_abbr = payload['abbreviated_name'],
+                business.abbreviated_name = payload['abbreviated_name'],
                 business.address = payload['address'],
                 business.country = payload['country'],
                 business.entity = payload['entity'],
                 business.revenue = payload['revenue'],
-                business.acc_sftw = payload['accounting_software']
+                business.accounting_software = payload['accounting_software']
 
                 business.save()
                 country_s = self.Country.query.filter_by(business_id=business.uuid).all()
@@ -116,7 +142,7 @@ class BusinessAPI(Resource):
                 countries = payload['countries'].split(",")
                 for country in countries:
                     new_country = self.Country(
-                        name=country.lower(),
+                        name=string.capwords(country),
                         business_id=business.uuid
                     )
                     new_country.save()
