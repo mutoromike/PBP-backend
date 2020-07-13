@@ -1,4 +1,4 @@
-from datetime
+import datetime
 from marshmallow import (Schema, ValidationError, fields, post_load, validate,
                          validates_schema)
 
@@ -133,7 +133,7 @@ class TransactionsSchema(BaseSchema):
         })
 
     @post_load
-    def verify_user(self, data, **kwargs):
+    def verify_date(self, data, **kwargs):
         """Extra validation for the Register User Schema."""
         dates = [data['due_date'], data['transaction_date']]
 

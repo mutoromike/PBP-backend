@@ -19,6 +19,12 @@ class Business(Base):
         lazy='dynamic',
         cascade="all, delete-orphan"
     )
+    transactions = db.relationship(
+        'Transaction',
+        backref='business',
+        lazy='dynamic',
+        cascade="all, delete-orphan"
+    )
     created_by_id = db.Column(
         db.String,
         db.ForeignKey('users.uuid'),
@@ -54,4 +60,14 @@ class Transaction(Base):
     quantity = db.Column(db.Integer, default=0, nullable=False)
     unit_amount = db.Column(db.Float, default=0.0, nullable=False)
     transaction_amount = db.Column(db.Float, default=0.0, nullable=False)
+    business_id = db.Column(
+        db.String,
+        db.ForeignKey('businesses.uuid'),
+        nullable=False
+    )
+    created_by_id = db.Column(
+        db.String,
+        db.ForeignKey('users.uuid'),
+        nullable=False
+    )
 
