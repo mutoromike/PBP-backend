@@ -5,7 +5,7 @@ from flask_restful import Resource
 from flask import request, g
 from pandas import pandas as pd
 
-from api.endpoints.business.models import Business, Country
+from api.endpoints.business.models import Business, Country, Transaction
 from api.utils.helpers import response_builder
 from .marshmallow_schema import business_schema
 from api.services.auth import token_required
@@ -157,8 +157,32 @@ class BusinessAPI(Resource):
 
 class ProcessCsvAPI(Resource):
 
+    def __init__(self, **kwargs):
+        """
+        Inject resource dependencies
+        """
+
+        self.Transaction = kwargs['Transaction']
+
     def post(self):
         payload = request.files['file']
-        data = pd.read_csv(payload)
-        print(data)
+        data = pd.read_csv(payload, header=None)
+        """ Check for random headers"""
+        if data.iloc[0, 0] != "Do not change the headers" or data.iloc[10, 1] != "Required" \
+                or data.iloc[21, 0] != "Order Payment" or data.iloc[25, 2] != "Status":
+            return response_builder(dict(message="The file headers are corrupted, \
+                kindly upload file with correct headers"), 400)
+        if data.iloc[25, 0] != "Transaction" or data.iloc[25, 1] != "ID" or data.iloc[25, 2] != "Status"\
+                or data.iloc[25, 3] != "Transaction Date" or data.iloc[25, 4] != "Due Date" or data.iloc[25, 5] != \
+                "Customer or Supplier" or data.iloc[25, 6] != "Item" or data.iloc[25, 7] != "Quantity":
+            return response_builder(dict(message="The file headers are corrupted, \
+                kindly upload file with correct headers"), 400)
+
+        fields = data.loc[27:]
+        if fields.isnull().values.any():
+            return response_builder(dict(message="Some of the required fields \
+                are missing"), 400)
+        for i in range(len(fields)):
+            print(fields.iloc[i, 0], type(fields.iloc[i, 1])) 
+
         return

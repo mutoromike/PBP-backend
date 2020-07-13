@@ -37,3 +37,21 @@ class Country(Base):
         db.ForeignKey('businesses.uuid'),
         nullable=False
     )
+
+
+class Transaction(Base):
+    """Model Transaction"""
+
+    __tablename__ = "transations"
+
+    item = db.Column(db.String, default="", nullable=False)
+    transaction_type = db.Column(db.String, default="", nullable=False)
+    transaction_id = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.String, default="", nullable=False)
+    transaction_date = db.Column(db.String, default="", nullable=False)
+    due_date = db.Column(db.String, default="", nullable=False)
+    customer_or_supplier = db.Column(db.String, default="", nullable=False)
+    quantity = db.Column(db.Integer, default=0, nullable=False)
+    unit_amount = db.Column(db.Float, default=0.0, nullable=False)
+    transaction_amount = db.Column(db.Float, default=0.0, nullable=False)
+
