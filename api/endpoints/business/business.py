@@ -1,16 +1,16 @@
 import datetime
 import string
+import operator
 
 from flask_restful import Resource
 from flask import request, g
 from pandas import pandas as pd
+from sqlalchemy import func
 
 from api.endpoints.business.models import Business, Country, Transaction
-from api.utils.helpers import response_builder, validate_file
+from api.utils.helpers import response_builder, validate_file, format_date
 from .marshmallow_schema import business_schema, transactions_schema
 from api.services.auth import token_required
-
-from api.models.base import db
 
 access_time = str(datetime.datetime.utcnow().time())
 
@@ -206,3 +206,63 @@ class ProcessCsvAPI(Resource):
         else:
             return response_builder(dict(
                 message="Register a Business before uploading any files!"), 400)
+
+    @token_required
+    def get(self):
+        """ Get Analytics for 30 days"""
+        user = g.current_user.uuid
+        start_date = datetime.datetime.now() - datetime.timedelta(60)
+        start = format_date(str(start_date.date()))
+        stop = format_date(str(datetime.datetime.now().date()))
+        data = Transaction.query.filter(func.DATE(Transaction.due_date) <= stop).filter(
+            func.DATE(Transaction.due_date) >= start).filter(Transaction.created_by_id == user)
+        if data:
+            """ Get first 5 items in terms of quantity """
+            leading_quantity = {}
+            for d in data:
+                if d.transaction_type == "Order":
+                    leading_quantity[d.item] = d.quantity
+            ordered = dict(sorted(leading_quantity.items(),
+                                  key=operator.itemgetter(1), reverse=True))
+            ranked_quantity = {k: ordered[k] for k in list(ordered)[:5]}
+            """ Get first 5 items in terms of value """
+            leading_value = {}
+            for d in data:
+                if d.transaction_type == "Order":
+                    leading_value[d.item] = d.quantity * d.unit_amount
+            ordered_ = dict(sorted(leading_value.items(),
+                                   key=operator.itemgetter(1), reverse=True))
+            ranked_value = {k: ordered_[k] for k in list(ordered_)[:5]}
+            """ Get incoming amount """
+            orders = set()
+            orders_payment = set()
+            for d in data:
+                if d.transaction_type == "Order":
+                    orders.add(d.transaction_amount)
+                if d.transaction_type == "Order Payment":
+                    orders_payment.add(d.transaction_amount)
+            incoming_amount = sum(orders) - sum(orders_payment)
+            """ Get outgoing amount """
+            bills = set()
+            bills_payment = set()
+            for d in data:
+                if d.transaction_type == "Bill":
+                    print()
+                    bills.add(d.transaction_amount)
+                if d.transaction_type == "Bill Payment":
+                    bills_payment.add(d.transaction_amount)
+            outgoing_amount = sum(bills) - sum(bills_payment)
+
+            data = {
+                "leading_quantity": ranked_quantity,
+                "leading_value": ranked_value,
+                "incoming": incoming_amount,
+                "outgoing": outgoing_amount,
+                "user":,
+                "business":
+            }
+            return response_builder(data, 200)
+        else:
+            return response_builder(dict(
+                message="No data for the specified period"
+            ), 404)
