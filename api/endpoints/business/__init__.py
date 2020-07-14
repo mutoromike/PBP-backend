@@ -2,7 +2,7 @@
 
 
 def business_bp(Api, Blueprint):
-    from .models import Business, Country
+    from .models import Business, Country, Transaction
     from .business import BusinessAPI, ProcessCsvAPI
 
     business_bp_service = Blueprint('business_api', __name__)
@@ -26,8 +26,12 @@ def business_bp(Api, Blueprint):
         ProcessCsvAPI,
         '/data-upload',
         '/data-upload/',
+        '/analytics',
+        '/analytics/',
         endpoint='data_upload',
         resource_class_kwargs={
+            "Transaction": Transaction,
+            'Business': Business,
         }
     )
     return business_bp_service

@@ -39,6 +39,9 @@ class Base(db.Model):
             db.session.commit()
             return True
         except SQLAlchemyError:
+            # print(SQLAlchemyError)
+            # import pdb;
+            pdb.set_trace()
             db.session.rollback()
             return False
 

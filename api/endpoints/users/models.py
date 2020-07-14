@@ -20,6 +20,12 @@ class User(Base):
         lazy='dynamic',
         order_by='desc(Business.created_at)'
     )
+    transactions = db.relationship(
+        'Transaction',
+        backref='created_by',
+        lazy='dynamic',
+        cascade="all, delete-orphan"
+    )
 
     def __init__(self, first_name, last_name, email, password):
         """

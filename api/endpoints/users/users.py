@@ -81,7 +81,7 @@ class LoginUserAPI(Resource):
             return response_builder(dict(
                 token=token.decode(),
                 message='Successful Login, Welcome to PBP'
-            ), 201)
+            ), 200)
 
         return response_builder(dict(
                                 message="User data must be provided."),
