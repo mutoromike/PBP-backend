@@ -28,7 +28,8 @@ def business_bp(Api, Blueprint):
         '/data-upload/',
         endpoint='data_upload',
         resource_class_kwargs={
-            "Transaction": Transaction
+            "Transaction": Transaction,
+            'Business': Business,
         }
     )
     return business_bp_service

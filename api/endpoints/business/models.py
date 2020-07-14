@@ -52,7 +52,7 @@ class Transaction(Base):
 
     item = db.Column(db.String, default="", nullable=False)
     transaction_type = db.Column(db.String, default="", nullable=False)
-    transaction_id = db.Column(db.Integer, nullable=False)
+    transaction_id = db.Column(db.Integer, default=0, nullable=False)
     status = db.Column(db.String, default="", nullable=False)
     transaction_date = db.Column(db.String, default="", nullable=False)
     due_date = db.Column(db.String, default="", nullable=False)
@@ -70,4 +70,3 @@ class Transaction(Base):
         db.ForeignKey('users.uuid'),
         nullable=False
     )
-

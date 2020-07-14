@@ -83,7 +83,7 @@ class TransactionsSchema(BaseSchema):
         error_messages={
             'required': {'message': 'Transaction ID is required.'}
         })
-    Status = fields.String(
+    status = fields.String(
         required=True,
         validate=validate.Length(min=3),
         error_messages={
@@ -113,21 +113,18 @@ class TransactionsSchema(BaseSchema):
 
     quantity = fields.Integer(
         required=True,
-        validate=validate.Length(min=1),
         error_messages={
             'required': {'message': 'Quantity is required.'}
         })
 
     unit_amount = fields.Float(
         required=True,
-        validate=validate.Length(min=1),
         error_messages={
             'required': {'message': 'Unit Amount is required.'}
         })
 
     transaction_amount = fields.Float(
         required=True,
-        validate=validate.Length(min=1),
         error_messages={
             'required': {'message': 'Transaction Amount is required.'}
         })
@@ -140,8 +137,9 @@ class TransactionsSchema(BaseSchema):
         for data in dates:
             try:
                 datetime.datetime.strptime(data, '%d-%m-%Y')
-            except ValueError:
-                raise ValueError("Incorrect data format, should be DD-MM-YYYY")
+            except:
+                raise ValidationError(
+                    {'message': "Incorrect data format, should be DD-MM-YYYY"})
 
 
 transactions_schema = TransactionsSchema()

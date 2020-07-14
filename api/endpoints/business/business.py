@@ -6,9 +6,11 @@ from flask import request, g
 from pandas import pandas as pd
 
 from api.endpoints.business.models import Business, Country, Transaction
-from api.utils.helpers import response_builder
-from .marshmallow_schema import business_schema
+from api.utils.helpers import response_builder, validate_file
+from .marshmallow_schema import business_schema, transactions_schema
 from api.services.auth import token_required
+
+from api.models.base import db
 
 access_time = str(datetime.datetime.utcnow().time())
 
@@ -163,26 +165,44 @@ class ProcessCsvAPI(Resource):
         """
 
         self.Transaction = kwargs['Transaction']
+        self.Business = kwargs['Business']
 
+    @token_required
     def post(self):
-        payload = request.files['file']
-        data = pd.read_csv(payload, header=None)
-        """ Check for random headers"""
-        if data.iloc[0, 0] != "Do not change the headers" or data.iloc[10, 1] != "Required" \
-                or data.iloc[21, 0] != "Order Payment" or data.iloc[25, 2] != "Status":
-            return response_builder(dict(message="The file headers are corrupted, \
-                kindly upload file with correct headers"), 400)
-        if data.iloc[25, 0] != "Transaction" or data.iloc[25, 1] != "ID" or data.iloc[25, 2] != "Status"\
-                or data.iloc[25, 3] != "Transaction Date" or data.iloc[25, 4] != "Due Date" or data.iloc[25, 5] != \
-                "Customer or Supplier" or data.iloc[25, 6] != "Item" or data.iloc[25, 7] != "Quantity":
-            return response_builder(dict(message="The file headers are corrupted, \
-                kindly upload file with correct headers"), 400)
+        user = g.current_user.uuid
+        existing = self.Business.query.filter_by(created_by_id=user).first()
+        if existing:
+            payload = request.files['file']
+            data = pd.read_csv(payload, header=None)
+            fields = data.loc[27:]
+            validate_file(data, fields)
+            for i in range(len(fields)):
+                payload = {
+                    "transaction_type": fields.iloc[i, 0],
+                    "transaction_id": int(fields.iloc[i, 1]),
+                    "status": fields.iloc[i, 2],
+                    "transaction_date": fields.iloc[i, 3],
+                    "due_date": fields.iloc[i, 4],
+                    "customer_or_supplier": fields.iloc[i, 5],
+                    "item": fields.iloc[i, 6],
+                    "quantity": int(fields.iloc[i, 7]),
+                    "unit_amount": float(fields.iloc[i, 8]),
+                    "transaction_amount": float(fields.iloc[i, 9])
+                }
+                try:
+                    transactions_schema.load(payload)
+                except Exception as err:
+                    return response_builder(dict(err.messages), 400)
 
-        fields = data.loc[27:]
-        if fields.isnull().values.any():
-            return response_builder(dict(message="Some of the required fields \
-                are missing"), 400)
-        for i in range(len(fields)):
-            print(fields.iloc[i, 0], type(fields.iloc[i, 1])) 
+                transaction = transactions_schema.dump(payload)
+                transaction["created_by_id"] = user
+                transaction["business_id"] = existing.uuid
+                new_transaction = Transaction(**transaction)
 
-        return
+                new_transaction.save()
+
+                return response_builder(dict(
+                    message="File successfully Uploaded and Processed"), 200)
+        else:
+            return response_builder(dict(
+                message="Register a Business before uploading any files!"), 400)
