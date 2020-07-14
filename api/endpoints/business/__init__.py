@@ -26,6 +26,8 @@ def business_bp(Api, Blueprint):
         ProcessCsvAPI,
         '/data-upload',
         '/data-upload/',
+        '/analytics',
+        '/analytics/',
         endpoint='data_upload',
         resource_class_kwargs={
             "Transaction": Transaction,

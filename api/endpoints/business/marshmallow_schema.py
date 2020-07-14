@@ -139,7 +139,7 @@ class TransactionsSchema(BaseSchema):
                 datetime.datetime.strptime(data, '%d-%m-%Y')
             except:
                 raise ValidationError(
-                    {'message': "Incorrect data format, should be DD-MM-YYYY"})
+                    {'message': "Incorrect date data format, should be DD-MM-YYYY"})
 
 
 transactions_schema = TransactionsSchema()
