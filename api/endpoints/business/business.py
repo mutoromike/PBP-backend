@@ -169,10 +169,14 @@ class ProcessCsvAPI(Resource):
 
     @token_required
     def post(self):
+        payload = request.files['file']
+        if payload.mimetype != "text/csv" or not payload:
+            return response_builder(dict(
+                message="Please upload a CSV file"
+            ), 400)
         user = g.current_user.uuid
         existing = self.Business.query.filter_by(created_by_id=user).first()
         if existing:
-            payload = request.files['file']
             data = pd.read_csv(payload, header=None)
             fields = data.loc[27:]
             validate_file(data, fields)
@@ -199,7 +203,7 @@ class ProcessCsvAPI(Resource):
                 transaction["business_id"] = existing.uuid
                 new_transaction = Transaction(**transaction)
 
-                new_transaction.save()
+                # new_transaction.save()
 
                 return response_builder(dict(
                     message="File successfully Uploaded and Processed"), 200)
@@ -217,6 +221,8 @@ class ProcessCsvAPI(Resource):
         data = Transaction.query.filter(func.DATE(Transaction.due_date) <= stop).filter(
             func.DATE(Transaction.due_date) >= start).filter(Transaction.created_by_id == user)
         if data:
+            business = Business.query.filter_by(created_by_id=data[0].created_by_id).first()
+            print(business.name.strip())
             """ Get first 5 items in terms of quantity """
             leading_quantity = {}
             for d in data:
@@ -258,8 +264,8 @@ class ProcessCsvAPI(Resource):
                 "leading_value": ranked_value,
                 "incoming": incoming_amount,
                 "outgoing": outgoing_amount,
-                "user":,
-                "business":
+                "user": string.capwords(g.current_user.first_name + " " + g.current_user.last_name),
+                "business": string.capwords(business.name)
             }
             return response_builder(data, 200)
         else:
