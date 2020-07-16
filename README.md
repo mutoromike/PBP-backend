@@ -25,7 +25,7 @@ A sample analytics results shown below:
   },
   "leading_value": {
     "Apuseke Shopper": 2433.6,
-    "Large Gambibgo Pot": 2918.3999999999996,
+    "Large Gambibgo Pot": 2918.39,
     "Large Market Basket": 3048.0,
     "Petal Shopper": 1612.8,
     "XL Oval Shopper": 2951.2
