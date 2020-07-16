@@ -202,11 +202,10 @@ class ProcessCsvAPI(Resource):
                 transaction["created_by_id"] = user
                 transaction["business_id"] = existing.uuid
                 new_transaction = Transaction(**transaction)
+                new_transaction.save()
 
-                # new_transaction.save()
-
-                return response_builder(dict(
-                    message="File successfully Uploaded and Processed"), 200)
+            return response_builder(dict(
+                message="File successfully Uploaded and Processed"), 200)
         else:
             return response_builder(dict(
                 message="Register a Business before uploading any files!"), 400)
@@ -220,9 +219,9 @@ class ProcessCsvAPI(Resource):
         stop = format_date(str(datetime.datetime.now().date()))
         data = Transaction.query.filter(func.DATE(Transaction.due_date) <= stop).filter(
             func.DATE(Transaction.due_date) >= start).filter(Transaction.created_by_id == user)
-        if data:
-            business = Business.query.filter_by(created_by_id=data[0].created_by_id).first()
-            print(business.name.strip())
+        if data.count() > 0:
+            business = Business.query.filter_by(
+                created_by_id=data[0].created_by_id).first()
             """ Get first 5 items in terms of quantity """
             leading_quantity = {}
             for d in data:
@@ -253,7 +252,6 @@ class ProcessCsvAPI(Resource):
             bills_payment = set()
             for d in data:
                 if d.transaction_type == "Bill":
-                    print()
                     bills.add(d.transaction_amount)
                 if d.transaction_type == "Bill Payment":
                     bills_payment.add(d.transaction_amount)
@@ -265,7 +263,8 @@ class ProcessCsvAPI(Resource):
                 "incoming": incoming_amount,
                 "outgoing": outgoing_amount,
                 "user": string.capwords(g.current_user.first_name + " " + g.current_user.last_name),
-                "business": string.capwords(business.name)
+                "business": string.capwords(business.name),
+                "message": "Analitics pulled successfully"
             }
             return response_builder(data, 200)
         else:
