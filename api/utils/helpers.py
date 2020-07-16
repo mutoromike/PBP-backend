@@ -1,5 +1,5 @@
 """Contain utility functions and constants."""
-
+import datetime
 from flask import jsonify
 
 
@@ -25,3 +25,8 @@ def validate_file(data, fields):
         return response_builder(dict(message="Some of the required fields \
                 are missing"), 400)
     pass
+
+
+def format_date(date):
+    return datetime.datetime.strptime(
+            date, "%Y-%m-%d").strftime("%d-%m-%Y")
