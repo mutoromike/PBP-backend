@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mutoromike/PBP-backend.svg?branch=ft-implement-tests)](https://travis-ci.org/mutoromike/PBP-backend)
+
 # PBP-API
 
 An API that enables businesses run efficiently by providing core business functionalities.
