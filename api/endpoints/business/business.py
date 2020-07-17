@@ -174,6 +174,7 @@ class ProcessCsvAPI(Resource):
             return response_builder(dict(
                 message="Please upload a CSV file"
             ), 400)
+        print("we are here")
         user = g.current_user.uuid
         existing = self.Business.query.filter_by(created_by_id=user).first()
         if existing:
@@ -214,7 +215,7 @@ class ProcessCsvAPI(Resource):
     def get(self):
         """ Get Analytics for 30 days"""
         user = g.current_user.uuid
-        start_date = datetime.datetime.now() - datetime.timedelta(60)
+        start_date = datetime.datetime.now() - datetime.timedelta(30)
         start = format_date(str(start_date.date()))
         stop = format_date(str(datetime.datetime.now().date()))
         data = Transaction.query.filter(func.DATE(Transaction.due_date) <= stop).filter(
