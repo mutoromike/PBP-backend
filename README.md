@@ -2,6 +2,7 @@
 
 # PBP-API
 
+### View API Documentation [HERE](https://documenter.getpostman.com/view/3425671/T1DiHghM)
 An API that enables businesses run efficiently by providing core business functionalities.
 
 This API is consumed by a `REACTJS` front-end service. 

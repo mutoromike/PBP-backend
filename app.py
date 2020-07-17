@@ -1,5 +1,5 @@
 """ app/__init__.py """
-from flask import Flask, Blueprint
+from flask import Flask, Blueprint, redirect
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -28,5 +28,9 @@ def create_app(config_name):
         business_bp(Api, Blueprint),
         url_prefix=url_version_1
     )
+
+    @app.route('/')
+    def health_check_url():
+        return redirect("https://documenter.getpostman.com/view/3425671/T1DiHghM", code=200)
 
     return app
