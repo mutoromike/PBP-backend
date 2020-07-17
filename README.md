@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mutoromike/PBP-backend.svg?branch=ft-implement-tests)](https://travis-ci.org/mutoromike/PBP-backend)
+[![Build Status](https://travis-ci.org/mutoromike/PBP-backend.svg?branch=master)](https://travis-ci.org/mutoromike/PBP-backend)
 
 # PBP-API
 
