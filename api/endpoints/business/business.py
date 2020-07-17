@@ -174,6 +174,7 @@ class ProcessCsvAPI(Resource):
             return response_builder(dict(
                 message="Please upload a CSV file"
             ), 400)
+        print("we are here")
         user = g.current_user.uuid
         existing = self.Business.query.filter_by(created_by_id=user).first()
         if existing:

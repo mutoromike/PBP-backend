@@ -1,0 +1,75 @@
+Do not change the headers,,,,,,,,,
+Start inserting information on line 28 and Save As a .csv file,,,,,,,,,
+Dates must be in MM/DD/YYYY format,,,,,,,,,
+Each item in an order should be entered on a separate row,,,,,,,,,
+Order Payment will use the same ID as Order being fulfilled,,,,,,,,,
+Bill Payment will use the same ID as the Bill being paid,,,,,,,,,
+Nonrequired Transactions will add additional insight and functionality to your Dashboard,,,,,,,,,
+"Total Transaction Amount is inclusive of all Taxes, Discounts, Shipping Costs, Fees or Other Adjustments",,,,,,,,,
+,,,,,,,,,
+Use the following table to help identify the naming convention for the transaction,,,,,,,,,
+Transaction Name,Required,Status,Description,,,,,,
+Order,Yes,"Pending, Accepted, Rejected, or Completed",Itemized document sent to Customer detailing out the Order,,,,,,
+Order Payment,No,n/a,The reciept of payment from Customer against the order,,,,,,
+Bill,No,Open or Closed,The payment request received from a Supplier,,,,,,
+Bill Payment,No,n/a,The payment of Bill request going to a Supplier,,,,,,
+,,,,,,,,,
+Example,,,,,,,,,
+Transaction,ID,Status,Transaction Date,Due Date,Customer or Supplier,Item,Quantity,Unit Amount,Total Transaction Amount
+Order,3768,Completed,8/29/2019,9/20/2019,Target,Basket - Small,1000,18,60000
+Order,3768,Completed,8/29/2019,9/20/2019,Target,Basket - Medium,1000,20,60000
+Order,3768,Completed,8/29/2019,9/20/2019,Target,Basket - Large,1000,22,60000
+Order Payment,3768,,8/30/2019,,Target,,,,12000
+Bill,3773,Completed,10/14/2019,12/14/2019,Palm Leaves Coop,Palm Leaves,70000,0.75,52500
+Order Payment,3768,,9/17/2019,,Target,,,,48000
+Bill Payment,3773,,12/16/2019,,Palm Leaves Coop,,,,52500
+Transaction,ID,Status,Transaction Date,Due Date,Customer or Supplier,Item,Quantity,Unit Amount,Total Transaction Amount
+Insert Below this Line,,,,,,,,,
+Order,255,Pending,27-05-2020,25-08-2020,Wayfair,Medium Gambidgo Pot,160,13.44,6506.64
+Order,255,Pending,27-05-2020,25-08-2020,Wayfair,Medium Yikene Tote,215,13.44,6506.64
+Order,255,Pending,27-05-2020,25-08-2020,Wayfair,XL Oval Shopper,115,19.04,6506.64
+Bill,258,Open,26-05-2020,26-07-2020,Natural Fiber Coop,Bamboo,1800,0.2,1500
+Bill,258,Open,26-05-2020,26-07-2020,Natural Fiber Coop,Banana Bark,2050,0.3,1500
+Bill,258,Open,26-05-2020,26-07-2020,Natural Fiber Coop,Palm Leaves,5000,0.1,1500
+Order,254,Accepted,23-05-2020,21-08-2020,Macy's,Gambibgo Shopper,195,20.48,9984
+Order,254,Accepted,23-05-2020,21-08-2020,Macy's,Mini Gambibgo Pot,175,9.92,9984
+Order,254,Accepted,23-05-2020,21-08-2020,Macy's,Pail,240,12.64,9984
+Order,254,Accepted,23-05-2020,21-08-2020,Macy's,XL Oval Shopper,50,19.04,9984
+Order,253,Accepted,17-05-2020,15-08-2020,Cost Plus World Market,Apuseke Shopper,65,12.48,7129.76
+Order,253,Accepted,17-05-2020,15-08-2020,Cost Plus World Market,Gambibgo Shopper,225,20.48,7129.76
+Order,253,Accepted,17-05-2020,15-08-2020,Cost Plus World Market,Mini Gambibgo Pot,245,9.92,7129.76
+Order,253,Accepted,17-05-2020,15-08-2020,Cost Plus World Market,Oval Shopper,60,12.64,7129.76
+Order,252,Accepted,08-05-2020,07-06-2020,Crate & Barrel,Large Gambibgo Pot,160,18.24,9077.28
+Order,252,Accepted,08-05-2020,07-06-2020,Crate & Barrel,Large Market Basket,150,20.32,9077.28
+Order,252,Accepted,08-05-2020,07-06-2020,Crate & Barrel,Petal Shopper,120,13.44,9077.28
+Order,252,Accepted,08-05-2020,07-06-2020,Crate & Barrel,XL Oval Shopper,65,19.04,9077.28
+Order,251,Accepted,01-05-2020,30-07-2020,Crate & Barrel,Large Gambibgo Pot,215,18.24,8548.32
+Order,251,Accepted,01-05-2020,30-07-2020,Crate & Barrel,Medium Gambidgo Pot,235,13.44,8548.32
+Order,251,Accepted,01-05-2020,30-07-2020,Crate & Barrel,Mini Yikene Tote,210,9.44,8548.32
+Bill,251,Open,20-04-2020,02-06-2020,Plant Fiber Association,Bamboo,1000,0.5,1250
+Bill,251,Open,20-04-2020,02-06-2020,Plant Fiber Association,Palm Leaves,500,1,1250
+Order,252,Closed,20-04-2020,20-05-2020,Anthropologie,Mini Oval Shopper,115,6.24,1383.04
+Order,252,Closed,20-04-2020,20-05-2020,Anthropologie,Oval Shopper,80,12.64,1383.04
+Order,249,Closed,18-04-2020,18-05-2020,Anthropologie,Apuseke Shopper,95,12.48,6899.52
+Order,249,Closed,18-04-2020,18-05-2020,Anthropologie,Large Market Basket,230,20.32,6899.52
+Order,249,Closed,18-04-2020,18-05-2020,Anthropologie,Medium Gambidgo Pot,55,13.44,6899.52
+Order,249,Closed,18-04-2020,18-05-2020,Anthropologie,Small Market Basket,80,13.6,6899.52
+Order,248,Accepted,08-04-2020,07-06-2020,Crate & Barrel,Gambibgo Shopper,70,20.48,5842.32
+Order,248,Accepted,08-04-2020,07-06-2020,Crate & Barrel,Mini Oval Shopper,105,6.24,5842.32
+Order,248,Accepted,08-04-2020,07-06-2020,Crate & Barrel,Pail,80,12.64,5842.32
+Order,248,Accepted,08-04-2020,07-06-2020,Crate & Barrel,XL Oval Shopper,155,19.04,5842.32
+Order,250,Closed,01-04-2020,31-05-2020,Ikea,Apuseke Shopper,125,12.48,3906.24
+Order,250,Closed,01-04-2020,31-05-2020,Ikea,Apuseke Shopper,195,12.48,3906.24
+Bill,260,Closed,28-03-2020,28-05-2020,Dye's and Colours,Green Dye,15,20,1000
+Bill,260,Closed,28-03-2020,28-05-2020,Dye's and Colours,Red Dye,20,20,1000
+Order,208,Closed,29-05-2019,27-08-2019,Ikea,Large Market Basket,165,20.32,6738.72
+Order,208,Closed,29-05-2019,27-08-2019,Ikea,Medium Yikene Tote,200,13.44,6738.72
+Order,208,Closed,29-05-2019,27-08-2019,Ikea,Mini Oval Shopper,180,6.24,6738.72
+Order,207,Closed,23-05-2019,21-08-2019,Target,Medium Gambidgo Pot,230,13.44,11927.36
+Order,207,Closed,23-05-2019,21-08-2019,Target,Pail,215,12.64,11927.36
+Order,207,Closed,23-05-2019,21-08-2019,Target,Petal Shopper,250,13.44,11927.36
+Order,207,Closed,23-05-2019,21-08-2019,Target,Should Bag,85,13.6,11927.36
+Order,206,Closed,15-05-2019,13-08-2019,Wayfair,Medium Yikene Tote,110,13.44,4432.16
+Order,206,Closed,15-05-2019,13-08-2019,Wayfair,Mini Gambibgo Pot,130,9.92,4432.16
+Order,206,Closed,15-05-2019,13-08-2019,Wayfair,Mini Yikene Tote,95,9.44,4432.16
+Order,206,Closed,15-05-2019,13-08-2019,Wayfair,Oval Shopper,65,12.64,4432.16
