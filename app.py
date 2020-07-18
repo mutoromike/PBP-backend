@@ -16,7 +16,7 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
-    cors = CORS(app)
+    CORS(app, resources=r'/api/*')
     url_version_1 = '/api/v1'
     # register users blueprint
     app.register_blueprint(
